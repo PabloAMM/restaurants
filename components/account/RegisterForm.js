@@ -3,9 +3,13 @@ import { size } from 'lodash'
 import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
+import { useNavigation } from '@react-navigation/native'
+
+
+
 import { validateEmail } from '../../utils/helpers'
-
-
+import { registerUser } from '../../utils/actions'
+import Loading from '../Loading'
 
 
 
@@ -16,18 +20,30 @@ export default function RegisterForm() {
     const [errorConfirm, setErrorConfirm] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
+    const [loadin, setLoadin] = useState(false)
 
+    const navigation = useNavigation()
 
     const onChange = (e, type) => {
         setFormData({ ...formData, [type]: e.nativeEvent.text })
 
 
     }
-    const registerUser = () => {
+
+    const doRegisterUser = async () => {
         if (!validateData()) {
             return
         }
-        console.log("Fuck")
+        setLoadin(true)
+        const result = await registerUser(formData.email, formData.password)
+        setLoadin(false)
+        if (!result.statusResponse) {
+            setErrorEmail(result.error)
+            return
+        }
+
+        navigation.navigate("account")
+
     }
 
     const validateData = () => {
@@ -40,11 +56,11 @@ export default function RegisterForm() {
             setErrorEmail("You must enter a valid email!")
             isValid = false
         }
-        if (size(formData.password)<6) {
+        if (size(formData.password) < 6) {
             setErrorPassword("You must enter a password greater than 6 characters")
             isValid = false
         }
-        if (size(formData.confirm)<6) {
+        if (size(formData.confirm) < 6) {
             setErrorConfirm("You must enter a password confirm greater than 6 characters")
             isValid = false
         }
@@ -105,7 +121,11 @@ export default function RegisterForm() {
                 title="Register new user"
                 containerStyle={styles.btnContainer}
                 buttonStyle={styles.btn}
-                onPress={() => registerUser()}
+                onPress={() => doRegisterUser()}
+            />
+            <Loading
+            isVisible={loadin} 
+            text="Creating account..."
             />
         </View>
     )
