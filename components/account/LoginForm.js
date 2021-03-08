@@ -1,22 +1,18 @@
-import { size } from 'lodash'
 import React, { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
 
-
-
-import { validateEmail } from '../../utils/helpers'
-import { registerUser } from '../../utils/actions'
 import Loading from '../Loading'
+import { validateEmail } from '../../utils/helpers'
+import { loginWithEmailAndPassword } from '../../utils/actions'
+import { isEmpty } from 'lodash'
 
 
-
-export default function RegisterForm() {
+export default function LoginForm() {
 
     const [errorEmail, setErrorEmail] = useState("")
     const [errorPassword, setErrorPassword] = useState("")
-    const [errorConfirm, setErrorConfirm] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [formData, setFormData] = useState(defaultFormValues())
     const [loadin, setLoadin] = useState(false)
@@ -28,16 +24,17 @@ export default function RegisterForm() {
 
 
     }
-
-    const doRegisterUser = async () => {
+    const doLogin = async() => {
         if (!validateData()) {
-            return
+             return
         }
+
         setLoadin(true)
-        const result = await registerUser(formData.email, formData.password)
+        const result = await loginWithEmailAndPassword(formData.email, formData.password)
         setLoadin(false)
         if (!result.statusResponse) {
             setErrorEmail(result.error)
+            setErrorPassword(result.error)
             return
         }
 
@@ -46,7 +43,6 @@ export default function RegisterForm() {
     }
 
     const validateData = () => {
-        setErrorConfirm("")
         setErrorEmail("")
         setErrorPassword("")
 
@@ -55,25 +51,16 @@ export default function RegisterForm() {
             setErrorEmail("You must enter a valid email!")
             isValid = false
         }
-        if (size(formData.password) < 6) {
-            setErrorPassword("You must enter a password greater than 6 characters")
-            isValid = false
-        }
-        if (size(formData.confirm) < 6) {
-            setErrorConfirm("You must enter a password confirm greater than 6 characters")
-            isValid = false
-        }
-        if (formData.confirm !== formData.confirm) {
-            setErrorConfirm("The password and confirm is not equal")
-            setErrorPassword("The password and confirm is not equal")
+
+        if (isEmpty(formData.password)) {
+            setErrorPassword("You must enter a password")
             isValid = false
         }
         return isValid
     }
+
     return (
-        <View
-            style={styles.form}
-        >
+        <View style={styles.container}>
             <Input
                 containerStyle={styles.input}
                 placeholder="Enter your email.."
@@ -99,32 +86,15 @@ export default function RegisterForm() {
                     />
                 }
             />
-            <Input
-                containerStyle={styles.input}
-                placeholder="Confirm your password.."
-                password={true}
-                secureTextEntry={!showPassword}
-                onChange={(e) => onChange(e, "confirm")}
-                errorMessage={errorConfirm}
-                defaultValue={formData.confirm}
-                rightIcon={
-                    <Icon
-                        type="material-community"
-                        name={showPassword ? "eye-off-outline" : "eye-outline"}
-                        iconStyle={styles.ico}
-                        onPress={() => setShowPassword(!showPassword)}
-                    />
-                }
-            />
             <Button
-                title="Register new user"
+                title="Log In"
                 containerStyle={styles.btnContainer}
                 buttonStyle={styles.btn}
-                onPress={() => doRegisterUser()}
+                onPress={ () => doLogin() }
             />
             <Loading
-            isVisible={loadin} 
-            text="Creating account..."
+                isVisible={loadin}
+                text="Logging in..."
             />
         </View>
     )
@@ -133,16 +103,22 @@ export default function RegisterForm() {
 const defaultFormValues = () => {
     return {
         email: "",
-        password: "",
-        confirm: ""
+        password: ""
     }
 }
+
 const styles = StyleSheet.create({
-    form: {
+    container: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
         marginTop: 30
     },
     input: {
         width: "100%"
+    },
+    ico: {
+        color: "#c1c1c1"
     },
     btnContainer: {
         marginTop: 20,
@@ -152,8 +128,5 @@ const styles = StyleSheet.create({
     btn: {
         backgroundColor: "#442484"
 
-    },
-    ico: {
-        color: "#c1c1c1"
     }
 })
