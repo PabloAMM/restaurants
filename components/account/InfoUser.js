@@ -26,7 +26,7 @@ export default function InfoUser({ user, setLoadinText, setLoadin }) {
             setPhotoUrl(resultUploadImage.url)
 
         } else {
-            Alert.alert("an error occurred while updating the profile picture.")
+            Alert.alert("An error occurred while updating the profile picture.")
         }
         
     }
