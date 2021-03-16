@@ -5,10 +5,12 @@ import { map } from 'lodash'
 
 import Modal from '../Modal'
 import ChangeDisplayNameForm from './ChangeDisplayNameForm'
+import ChangeEmailForm from './ChangeEmailForm'
+import ChangePasswordForm from './ChangePasswordForm'
 
-export default function AccountOptions({ user, toastRef,setReloadUser }) {
+export default function AccountOptions({ user, toastRef, setReloadUser }) {
 
-    const [showModal, setShowModal] = useState(true)
+    const [showModal, setShowModal] = useState(false)
     const [renderComponet, setRenderComponet] = useState(null)
 
     const generateOptions = () => {
@@ -44,22 +46,30 @@ export default function AccountOptions({ user, toastRef,setReloadUser }) {
         switch (key) {
             case "displayName":
                 setRenderComponet(
-                    <ChangeDisplayNameForm 
-                    displayName={user.displayName}
-                    setShowModal={setShowModal}
-                    toastRef={toastRef}
-                    setReloadUser={setReloadUser}
+                    <ChangeDisplayNameForm
+                        displayName={user.displayName}
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                        setReloadUser={setReloadUser}
                     />
                 )
                 break;
             case "email":
                 setRenderComponet(
-                    <Text>email</Text>
+                    <ChangeEmailForm
+                        email={user.email}
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                        setReloadUser={setReloadUser}
+                    />
                 )
                 break;
             case "password":
                 setRenderComponet(
-                    <Text>password</Text>
+                    <ChangePasswordForm
+                        setShowModal={setShowModal}
+                        toastRef={toastRef}
+                    />
                 )
 
                 break;
