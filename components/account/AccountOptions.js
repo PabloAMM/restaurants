@@ -1,14 +1,75 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { Icon, ListItem } from 'react-native-elements'
 import { map } from 'lodash'
+
 import Modal from '../Modal'
+import ChangeDisplayNameForm from './ChangeDisplayNameForm'
 
-export default function AccountOptions({ user, toastRef }) {
-
-    const menuOptions = generateOptions()
+export default function AccountOptions({ user, toastRef,setReloadUser }) {
 
     const [showModal, setShowModal] = useState(true)
+    const [renderComponet, setRenderComponet] = useState(null)
+
+    const generateOptions = () => {
+        return [
+            {
+                title: "Change Name and last name",
+                iconNameleft: "account-circle",
+                iconColorLeft: "#a7bfd3",
+                iconNameRight: "chevron-right",
+                iconColorRight: "#a7bfd3",
+                onPress: () => selectedComponet("displayName")
+            },
+            {
+                title: "Change Email",
+                iconNameleft: "at",
+                iconColorLeft: "#a7bfd3",
+                iconNameRight: "chevron-right",
+                iconColorRight: "#a7bfd3",
+                onPress: () => selectedComponet("email")
+            },
+            {
+                title: "Change Password",
+                iconNameleft: "lock-reset",
+                iconColorLeft: "#a7bfd3",
+                iconNameRight: "chevron-right",
+                iconColorRight: "#a7bfd3",
+                onPress: () => selectedComponet("password")
+            },
+        ]
+    }
+
+    const selectedComponet = (key) => {
+        switch (key) {
+            case "displayName":
+                setRenderComponet(
+                    <ChangeDisplayNameForm 
+                    displayName={user.displayName}
+                    setShowModal={setShowModal}
+                    toastRef={toastRef}
+                    setReloadUser={setReloadUser}
+                    />
+                )
+                break;
+            case "email":
+                setRenderComponet(
+                    <Text>email</Text>
+                )
+                break;
+            case "password":
+                setRenderComponet(
+                    <Text>password</Text>
+                )
+
+                break;
+        }
+        setShowModal(true)
+    }
+
+
+    const menuOptions = generateOptions();
+
     return (
         <View>
             {
@@ -35,51 +96,19 @@ export default function AccountOptions({ user, toastRef }) {
                 ))
             }
             <Modal isVisible={showModal} setVisible={setShowModal}>
-                <Text>Hola Mundo Modal</Text>
-                <Text>Hola Mundo Modal</Text>
-                <Text>Hola Mundo Modal</Text>
-                <Text>Hola Mundo Modal</Text>
-                <Text>Hola Mundo Modal</Text>
+                {
+                    renderComponet
+                }
             </Modal>
-
         </View>
 
     )
 
 }
 
-generateOptions = () => {
-    return [
-        {
-            title: "Change Name and last name",
-            iconNameleft: "account-circle",
-            iconColorLeft: "#a7bfd3",
-            iconNameRight: "chevron-right",
-            iconColorRight: "#a7bfd3",
-            onPress: () => selectedComponet("displayName")
-        },
-        {
-            title: "Change Email",
-            iconNameleft: "at",
-            iconColorLeft: "#a7bfd3",
-            iconNameRight: "chevron-right",
-            iconColorRight: "#a7bfd3",
-            onPress: () => selectedComponet("email")
-        },
-        {
-            title: "Change Password",
-            iconNameleft: "lock-reset",
-            iconColorLeft: "#a7bfd3",
-            iconNameRight: "chevron-right",
-            iconColorRight: "#a7bfd3",
-            onPress: () => selectedComponet("password")
-        },
-    ]
-}
 
-const selectedComponet = (key) => {
 
-}
+
 
 const styles = StyleSheet.create({
     menuItem: {
