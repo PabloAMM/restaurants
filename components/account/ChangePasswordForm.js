@@ -57,7 +57,7 @@ export default function ChangePasswordForm({ setShowModal, toastRef }) {
         let isvalid = true
 
         if (isEmpty(currrentPassword)) {
-            setErrorCurrentPassword("Enter your actual password!")
+            setErrorCurrentPassword("Enter your current password!")
             isvalid = false
         }
         if (size(newPassword) < 6) {
@@ -88,7 +88,7 @@ export default function ChangePasswordForm({ setShowModal, toastRef }) {
         <View style={styles.view}>
 
             <Input
-                placeholder="Enter your password actual"
+                placeholder="Enter your currrent password"
                 containerStyle={styles.input}
                 defaultValue={currrentPassword}
                 onChange={(e) => setCurrentPassword(e.nativeEvent.text)}
