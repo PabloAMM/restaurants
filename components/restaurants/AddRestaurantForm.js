@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, ScrollView, View, Alert, Dimensions, Text } from 'react-native'
 import { Button, Input, Icon, Avatar, Image, ButtonGroup } from 'react-native-elements'
 import CountryPicker from 'react-native-country-picker-modal'
-import { map, size, filter } from 'lodash'
+import { map, size, filter, isEmpty } from 'lodash'
 import MapView from 'react-native-maps'
 
-import { getCurrentLocation, loadImageFromGallery } from '../../utils/helpers'
+import { getCurrentLocation, loadImageFromGallery, validateEmail } from '../../utils/helpers'
 import Modal from '../../components/Modal'
 
 
@@ -24,7 +24,58 @@ export default function AddRestaurantForm({ toastRef, setLoading, navigation }) 
 
     const addRestaurant = () => {
 
-        console.log(formData)
+        if (!validForm()) {
+            return
+
+        }
+    }
+
+    const validForm = () => {
+        clearErrors()
+        let isValid = true
+        if (isEmpty(formData.name)) {
+            setErrorName("You must enter name of the restaurant")
+            isValid = false
+        }
+
+        if (isEmpty(formData.address)) {
+            setErrorAddress("You must enter address of the restaurant")
+            isValid = false
+        }
+
+        if (size(formData.phone) < 10) {
+            setErrorPhone("You must enter valid phone of the restaurant")
+            isValid = false
+        }
+
+        if (!validateEmail(formData.email)) {
+            setErrorEmail("You must enter a valid email of the restaurant")
+            isValid = false
+        }
+        if (isEmpty(formData.description)) {
+            setErrorDescription("You must enter a description of the restaurant")
+            isValid = false
+        }
+
+        if (!locationRestaurant) {
+            toastRef.current.show("You must locate the restaurant on the map", 3000)
+            isValid = false
+        } else if (size(imageSelected[0])<1) {
+            toastRef.current.show("You must add at least one image to the restaurant", 3000)
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    const clearErrors = () => {
+
+        setErrorDescription(null)
+        setErrorEmail(null)
+        setErrorName(null)
+        setErrorPhone(null)
+        setErrorAddress(null)
+
     }
 
     return (
@@ -67,7 +118,6 @@ export default function AddRestaurantForm({ toastRef, setLoading, navigation }) 
 function MapRestaurant({
     isVisibleMap,
     setIsVisibleMap,
-    locationRestaurant,
     setLocationRestaurant,
     toastRef
 }) {
