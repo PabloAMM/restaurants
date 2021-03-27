@@ -101,7 +101,7 @@ export const reauthenticate = async (password) => {
     }
 
     const user = getCurrentUser()
-    const credentials = firebase.auth.EmailAuthProvider.credential(user.email,password)
+    const credentials = firebase.auth.EmailAuthProvider.credential(user.email, password)
 
     try {
         await user.reauthenticateWithCredential(credentials)
@@ -138,6 +138,22 @@ export const updatePassword = async (password) => {
 
     try {
         await firebase.auth().currentUser.updatePassword(password)
+    } catch (error) {
+        result.statusResponse = false
+        result.error = error
+    }
+    return result
+}
+
+export const addDocumentWithoutId = async (collection, data) => {
+    const result = {
+        statusResponse: true,
+        error: null,
+
+    }
+
+    try {
+        await db.collection(collection).add(data)
     } catch (error) {
         result.statusResponse = false
         result.error = error

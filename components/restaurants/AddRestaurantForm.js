@@ -4,9 +4,11 @@ import { Button, Input, Icon, Avatar, Image, ButtonGroup } from 'react-native-el
 import CountryPicker from 'react-native-country-picker-modal'
 import { map, size, filter, isEmpty } from 'lodash'
 import MapView from 'react-native-maps'
+import uuid from 'random-uuid-v4'
 
 import { getCurrentLocation, loadImageFromGallery, validateEmail } from '../../utils/helpers'
 import Modal from '../../components/Modal'
+import { addDocumentWithoutId, getCurrentUser, uploadImage } from '../../utils/actions'
 
 
 const widthScreen = Dimensions.get("window").width
@@ -22,12 +24,58 @@ export default function AddRestaurantForm({ toastRef, setLoading, navigation }) 
     const [isVisibleMap, setIsVisibleMap] = useState(false)
     const [locationRestaurant, setLocationRestaurant] = useState(null)
 
-    const addRestaurant = () => {
+    const addRestaurant = async() => {
 
         if (!validForm()) {
             return
 
         }
+
+        setLoading(true)
+
+        const responseUploadImages = await UploadImages()
+        const restaurant = {
+            name: formData.name,
+            address: formData.address,
+            email: formData.email,
+            country: formData.country,
+            description: formData.description,
+            phone: formData.phone,
+            callingCode: formData.callingCode,
+            location: locationRestaurant,
+            images: responseUploadImages,
+            rating: 0,
+            ratingTotal: 0,
+            qantityVoting: 0,
+            createAt: new Date(),
+            createBy: getCurrentUser().uid
+        }
+        
+        const responseAddDocument = await addDocumentWithoutId("restaurant", restaurant)
+        setLoading(false)
+      
+        if (!responseAddDocument.statusResponse) {
+            toastRef.current.show("Error recording the restaurant, please try again later ",3000)
+            return
+        }
+        toastRef.current.show("Correctly created restaurant",3000)
+        navigation.navigate("restaurants")
+
+    } 
+
+    const UploadImages = async () => {
+        const imagesUrl = []
+        await Promise.all(
+
+            map(imageSelected, async (image) => {
+                const response = await uploadImage(image, "restaurants", uuid())
+                if (response.statusResponse) {
+                    imagesUrl.push(response.url)
+                }
+
+            })
+        )
+        return imagesUrl
     }
 
     const validForm = () => {
@@ -60,7 +108,7 @@ export default function AddRestaurantForm({ toastRef, setLoading, navigation }) 
         if (!locationRestaurant) {
             toastRef.current.show("You must locate the restaurant on the map", 3000)
             isValid = false
-        } else if (size(imageSelected[0])<1) {
+        } else if (size(imageSelected[0]) < 1) {
             toastRef.current.show("You must add at least one image to the restaurant", 3000)
             isValid = false
         }
