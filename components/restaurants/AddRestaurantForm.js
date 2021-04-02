@@ -31,9 +31,10 @@ export default function AddRestaurantForm({ toastRef, setLoading, navigation }) 
 
         }
 
-        setLoading(true)
+       setLoading(true)
 
         const responseUploadImages = await UploadImages()
+        
         const restaurant = {
             name: formData.name,
             address: formData.address,
@@ -52,6 +53,7 @@ export default function AddRestaurantForm({ toastRef, setLoading, navigation }) 
         }
         
         const responseAddDocument = await addDocumentWithoutId("restaurant", restaurant)
+        
         setLoading(false)
       
         if (!responseAddDocument.statusResponse) {

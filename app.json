@@ -13,27 +13,30 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier":"com.pabloamm.restaurants"
     },
     "android": {
+      "package":"com.pabloamm.restaurants",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "permissions":
-       [ 
-         "CAMERA_ROLL",
-         "READ_EXTERNAL_STORAGE",
-         "WRITE_EXTERNAL_STORAGE",
-         "LOCATION",
-         "ACCESS_COARSE_LOCATION",
-         "ACCESS_FINE_LOCATION"
-        ]
-      
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAke7CeLREBz37NJlc6XAX1ZMfDSjq4BIc"
+        }
+      },
+      "permissions": [
+        "CAMERA_ROLL",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

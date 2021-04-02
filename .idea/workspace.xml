@@ -3,12 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="e4f2fde7-0810-46bd-a669-cf86fd15e0b6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/account/ChangePasswordForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/account/ChangePasswordForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/navigations/AccountStack.js" beforeDir="false" afterPath="$PROJECT_DIR$/navigations/AccountStack.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/restaurants/AddRestaurantForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/restaurants/AddRestaurantForm.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/navigations/RestaurantsStack.js" beforeDir="false" afterPath="$PROJECT_DIR$/navigations/RestaurantsStack.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/Restaurants.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/restaurants/Restaurants.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/restaurants/Restaurants.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/utils/actions.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +43,9 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="110" y="120" width="1060" height="440" key="AVDManager" timestamp="1616431704684">
+    <state x="110" y="120" width="1060" height="440" key="AVDManager" timestamp="1617061648053">
       <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state x="110" y="120" width="1060" height="440" key="AVDManager/0.0.1280.680/1920.0.1280.680@0.0.1280.680" timestamp="1616431704684" />
+    <state x="110" y="120" width="1060" height="440" key="AVDManager/0.0.1280.680/1920.0.1280.680@0.0.1280.680" timestamp="1617061648053" />
   </component>
 </project>
