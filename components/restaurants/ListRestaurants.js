@@ -2,14 +2,18 @@ import { size } from 'lodash'
 import React from 'react'
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Image } from 'react-native-elements'
+import { getMoreRestaurants } from '../../utils/actions'
+import { formatPhone } from '../../utils/helpers'
 
 
-export default function ListRestaurants({ restaurans, navigation }) {
+export default function ListRestaurants({ restaurans, navigation, hanleLoadMore }) {
     return (
         <View>
             <FlatList
                 data={restaurans}
                 keyExtractor={(item, index) => index.toString()}
+                onEndReachedThreshold={0.5}
+                onEndReached={hanleLoadMore}
                 renderItem={(restaurant) => (
                     <Restaurant restaurant={restaurant} navigation={navigation}
                     />
@@ -23,10 +27,13 @@ function Restaurant({ restaurant, navigation }) {
     const { id, images, name, address, description, phone, callingCode } = restaurant.item
     const imageRestaurant = images[0]
 
+    const goRestaurant = () => {
+        navigation.navigate("restaurant", { id, name })
+    }
     return (
-        <TouchableOpacity>
-            <View style={styles.viewRestaurantsImage}>
-                <View style={styles.viewRestaurant}>
+        <TouchableOpacity onPress={goRestaurant}>
+            <View style={styles.viewRestaurant}>
+                <View style={styles.viewRestaurantsImage}>
                     <Image
                         resizeMode="cover"
                         PlaceholderContent={<ActivityIndicator color="#fff" />}
@@ -34,20 +41,20 @@ function Restaurant({ restaurant, navigation }) {
                         style={styles.imageRestaurant}
                     />
                 </View>
-            </View>
-            <View>
-                <Text style={styles.restauranTitle}>{name}</Text>
-                <Text style={styles.restaurantInformation}>{address}</Text>
-                <Text style={styles.restaurantInformation}>+{callingCode}-{phone}</Text>
-                <Text style={styles.restaurantDescription}>
+                <View>
+                    <Text style={styles.restauranTitle}>{name}</Text>
+                    <Text style={styles.restaurantInformation}>{address}</Text>
+                    <Text style={styles.restaurantInformation}>{formatPhone(callingCode, phone)}</Text>
+                    <Text style={styles.restaurantDescription}>
 
-                    {
-                        size(description) > 0
-                            ? `${description.substr(0, 60)}...`
-                            : description
-                    }
+                        {
+                            size(description) > 60
+                                ? `${description.substr(0, 60)}...`
+                                : description
+                        }
 
-                </Text>
+                    </Text>
+                </View>
             </View>
         </TouchableOpacity>
     )

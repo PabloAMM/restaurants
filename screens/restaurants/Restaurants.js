@@ -3,11 +3,12 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Icon } from 'react-native-elements'
 import firebase from 'firebase/app'
 import { useFocusEffect } from '@react-navigation/native'
+import { size } from 'lodash'
 
 import Loading from '../../components/Loading'
-import { getRestaurants } from '../../utils/actions'
+import { getRestaurants, getMoreRestaurants } from '../../utils/actions'
 import ListRestaurants from '../../components/restaurants/ListRestaurants'
-import { size } from 'lodash'
+
 
 export default function Restaurants({ navigation }) {
     const [user, setUser] = useState(null)
@@ -24,18 +25,36 @@ export default function Restaurants({ navigation }) {
     }, [])
 
     useFocusEffect(
-        useCallback(async () => {
-            setLoading(true)
-            const response = await getRestaurants(limitRestaurant)
-            setLoading(false)
-            if (response.statusResponse) {
-                setStartRestaurant(response.startRestaurant)
-                setRestaurants(response.restaurants)
+        useCallback(() => {
+            async function getData() {
+                setLoading(true)
+                const response = await getRestaurants(limitRestaurant)
+                setLoading(false)
+                if (response.statusResponse) {
+
+                    setStartRestaurant(response.startRestaurants)
+                    setRestaurants(response.restaurants)
+                }
             }
 
+            getData()
         }, [])
     )
 
+    const hanleLoadMore = async () => {
+        if (!startRestaurant) {
+            return
+        }
+        setLoading(true)
+        const response = await getMoreRestaurants(limitRestaurant, startRestaurant)
+        setLoading(false)
+        if (response.statusResponse) {
+            setStartRestaurant(response.startRestaurant)
+            setRestaurants([...restaurants, ...response.restaurants])
+        }
+
+        setLoading(false)
+    }
     if (user === null) {
         return <Loading Isvisible={true} text="Loading..." />
     }
@@ -45,7 +64,11 @@ export default function Restaurants({ navigation }) {
 
             {
                 size(restaurants) > 0 ? (
-                    <ListRestaurants restaurans={restaurants} navigation={navigation} />
+                    <ListRestaurants
+                        restaurans={restaurants}
+                        navigation={navigation}
+                        hanleLoadMore={hanleLoadMore}
+                    />
                 ) : (
                     <View style={styles.notFoundView}>
                         <Text style={styles.notFoundText}>There are no registered restaurants.</Text>
